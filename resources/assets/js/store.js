@@ -26,6 +26,9 @@ export default new Vuex.Store({
         },
         markDone(state, todo){
             state.commit('markDone', todo)
+        },
+        updateTodo({commit}, params){
+            commit('updateTodo', params)
         }
     },
 
@@ -44,6 +47,9 @@ export default new Vuex.Store({
         },
         markDone({todos}, todo){
             todos[todos.indexOf(todo)].done = true;
+        },
+        updateTodo({todos}, params){
+            todos[todos.indexOf(params.todo)].action = params.action
         }
     }
 })

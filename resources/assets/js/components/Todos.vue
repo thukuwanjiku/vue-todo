@@ -7,7 +7,8 @@
             <li class="list-group-item" v-show="todos.length<1">
                 <em>Nothing</em>
             </li>
-            <li v-for="(todo, index) in todos" class="list-group-item">
+            <li v-for="(todo, index) in todos" @dblclick="editTodo(todo, index)" class="list-group-item"
+            data-toggle="tooltip" data-placement="top" title="Double click to edit">
                 {{ todo.action }}
 
                 <span v-show="todo.done" class="badge badge-success done-indicator">Done</span>
@@ -29,9 +30,10 @@
         
         <div class="col-md-8 col-md-offset-2 m-t-30">
             <div class="form-group">
-                <textarea v-model:value="newTodo" class="form-control" placeholder="What do you wanna do?" rows="3"></textarea>
+                <textarea @keyup.enter="addTodo" v-model:value="action" class="form-control" placeholder="What do you wanna do?" rows="3"></textarea>
             </div>
-            <button :disabled="!validTodo" @click="addTodo" type="button" class="btn btn-success">Info</button>
+            <button :disabled="!validTodo" @click="addTodo" type="button" v-show="!editing" class="btn btn-success">Add</button>
+            <button :disabled="!validTodo" @click="updateTodo(todos[editingIndex])" v-show="editing" type="button" class="btn btn-success">Update</button>
         </div>
 
     </div>
@@ -47,7 +49,9 @@ export default {
     
     data(){
         return{
-            newTodo:''
+            action:'',
+            editing:false,
+            editingIndex:''
         }
     },
 
@@ -74,16 +78,16 @@ export default {
     
     computed:{
         validTodo(){
-            return this.newTodo.length > 5;
+            return this.action.length > 5;
         },
         ...mapGetters(['todos'])
     },
 
     methods:{
-        addTodo(){
+        addTodo(action){
 
-            this.$store.dispatch('addTodo', this.newTodo)
-            this.newTodo = ''
+            this.$store.dispatch('addTodo', this.action)
+            this.action = ''
             $.growl.notice({ message: "Added" });
         },
         deleteTodo(todo){
@@ -93,6 +97,19 @@ export default {
         markDone(todo){
             this.$store.dispatch('markDone', todo)
             // $.growl.notice({ message: "" });
+        },
+        editTodo(todo, index){
+            //add todo body to textarea
+            this.action = todo.action
+            this.editing = true;
+            this.editingIndex = index
+        },
+        updateTodo(todo){
+            let action = this.action
+            this.$store.dispatch('updateTodo', {todo, action})
+            this.action = ''
+            this.editing = false
+            $.growl.notice({ message: "Updated" })
         }
     }
 }
