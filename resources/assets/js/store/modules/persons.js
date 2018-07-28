@@ -1,6 +1,15 @@
 export default{
     state:{
-        persons:[]
+        persons:[
+            {
+                name:'Mike',
+                id: 'IAD8A0'
+            },
+            {
+                name:'Mary',
+                id:'ODF09'
+            }
+        ]
     },
 
     methods:{
@@ -33,6 +42,9 @@ export default{
         },
         removePerson({commit}, person){
             commit('removePerson', person)
+        },
+        personById(id){
+            return id;
         }
     },
 

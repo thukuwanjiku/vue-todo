@@ -13,8 +13,8 @@ export default{
         initialise(state, data){
             state.commit('initialise', data)
         },
-        addTodo(state, action){
-            state.commit('addTodo', action)
+        addTodo(state, todo){
+            state.commit('addTodo', todo)
         },
         deleteTodo(state, todo){
             state.commit('deleteTodo', todo);
@@ -31,11 +31,8 @@ export default{
         initialise(state, data){
             state.todos = data
         },
-        addTodo({todos}, action){
-            todos.push({
-                action,
-                done:false
-            })
+        addTodo({todos}, todo){
+            todos.push(todo)
         },
         deleteTodo({todos}, todo){
             todos.splice(todos.indexOf(todo), 1);

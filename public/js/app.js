@@ -48349,6 +48349,26 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -48358,7 +48378,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
     data: function data() {
         return {
-            action: '',
+            newTodo: {
+                action: '',
+                done: false,
+                person: ''
+            },
             editing: false,
             editingIndex: '',
 
@@ -48367,33 +48391,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             editingPersonsId: ''
         };
     },
-    created: function created() {
-        var persons = [{
-            name: 'John',
-            id: this.randomId()
-        }, {
-            name: 'Mike',
-            id: this.randomId()
-        }];
-        var todos = [{
-            action: 'Watch a movie',
-            done: false
-        }, {
-            action: 'Learn some vuejs',
-            done: true
-        }, {
-            action: 'Read a novel',
-            done: false
-        }];
-        this.$store.dispatch('addPerson', 'James');
-        // this.$store.dispatch('initialise', todos)
-        //console.log(todos)
-    },
 
 
     computed: _extends({
         validTodo: function validTodo() {
-            return this.action.length > 5;
+            return this.newTodo.action.length > 5 && this.newTodo.person.length;
         },
         validName: function validName() {
             return this.name.length > 2;
@@ -48401,11 +48403,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['todos', 'persons'])),
 
     methods: {
-        addTodo: function addTodo(action) {
+        addTodo: function addTodo() {
+            var _this = this;
 
-            this.$store.dispatch('addTodo', this.action);
-            this.action = '';
-            $.growl.notice({ message: "Added" });
+            this.$store.dispatch('addTodo', this.newTodo);
+            // this.newTodo.action = '',
+            window.setTimeout(function () {
+                _this.newTodo.action = '';
+                _this.newTodo.person = '';
+                $.growl.notice({ message: "Added" });
+            }, 500);
         },
         deleteTodo: function deleteTodo(todo) {
             this.$store.dispatch('deleteTodo', todo);
@@ -48457,125 +48464,126 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container m-t-30" }, [
-    _c(
-      "ul",
-      { staticClass: "list-group" },
-      [
-        _c("li", { staticClass: "list-group-item active" }, [
-          _vm._v("Todos (" + _vm._s(_vm.todos.length) + ")")
-        ]),
-        _vm._v(" "),
-        _c(
-          "li",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.todos.length < 1,
-                expression: "todos.length<1"
-              }
-            ],
-            staticClass: "list-group-item"
-          },
-          [_c("em", [_vm._v("Nothing")])]
-        ),
-        _vm._v(" "),
-        _vm._l(_vm.todos, function(todo, index) {
-          return _c(
-            "li",
+    _c("table", { staticClass: "table table-hover table-bordered" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        [
+          _c(
+            "tr",
             {
-              staticClass: "list-group-item",
-              attrs: {
-                "data-toggle": "tooltip",
-                "data-placement": "top",
-                title: "Double click to edit"
-              },
-              on: {
-                dblclick: function($event) {
-                  _vm.editTodo(todo, index)
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.todos.length < 1,
+                  expression: "todos.length<1"
                 }
-              }
+              ]
             },
-            [
-              _vm._v(
-                "\n            " + _vm._s(todo.action) + "\n\n            "
-              ),
-              _c(
-                "span",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: todo.done,
-                      expression: "todo.done"
-                    }
-                  ],
-                  staticClass: "badge badge-success done-indicator"
+            [_vm._m(1)]
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.todos, function(todo, index) {
+            return _c(
+              "tr",
+              {
+                attrs: {
+                  "data-toggle": "tooltip",
+                  "data-placement": "top",
+                  title: "Double click to edit"
                 },
-                [_vm._v("Done")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "close",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "tooltip",
-                    "data-placement": "top",
-                    title: "Delete todo"
-                  },
-                  on: {
-                    click: function($event) {
-                      _vm.deleteTodo(todo)
-                    }
+                on: {
+                  dblclick: function($event) {
+                    _vm.editTodo(todo, index)
                   }
-                },
-                [
-                  _c("span", { attrs: { "aria-hidden": "true" } }, [
-                    _vm._v("×")
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  directives: [
+                }
+              },
+              [
+                _c("td", [
+                  _vm._v(_vm._s(todo.action) + " "),
+                  _c(
+                    "span",
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: !todo.done,
-                      expression: "!todo.done"
-                    }
-                  ],
-                  staticClass: "close mark-done",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "tooltip",
-                    "data-placement": "top",
-                    title: "Mark as done"
-                  },
-                  on: {
-                    click: function($event) {
-                      _vm.markDone(todo)
-                    }
-                  }
-                },
-                [
-                  _c("span", { attrs: { "aria-hidden": "true" } }, [
-                    _vm._v("✔")
-                  ])
-                ]
-              )
-            ]
-          )
-        })
-      ],
-      2
-    ),
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: todo.done,
+                          expression: "todo.done"
+                        }
+                      ],
+                      staticClass: "badge badge-success done-indicator"
+                    },
+                    [_vm._v("Done")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(todo.person))]),
+                _vm._v(" "),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "close",
+                      attrs: {
+                        type: "button",
+                        "data-toggle": "tooltip",
+                        "data-placement": "top",
+                        title: "Delete todo"
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.deleteTodo(todo)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("×")
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !todo.done,
+                          expression: "!todo.done"
+                        }
+                      ],
+                      staticClass: "close mark-done",
+                      attrs: {
+                        type: "button",
+                        "data-toggle": "tooltip",
+                        "data-placement": "top",
+                        title: "Mark as done"
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.markDone(todo)
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("✔")
+                      ])
+                    ]
+                  )
+                ])
+              ]
+            )
+          })
+        ],
+        2
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "row m-t-30" }, [
       _c(
@@ -48589,86 +48597,136 @@ var render = function() {
               expression: "persons.length>0"
             }
           ],
-          staticClass: "col-6"
+          staticClass: "row todo-adder"
         },
         [
-          _c("div", { staticClass: "form-group" }, [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model:value",
-                  value: _vm.action,
-                  expression: "action",
-                  arg: "value"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { placeholder: "What do you wanna do?", rows: "3" },
-              domProps: { value: _vm.action },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
+          _c("div", { staticClass: "col-6" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model:value",
+                    value: _vm.newTodo.action,
+                    expression: "newTodo.action",
+                    arg: "value"
                   }
-                  return _vm.addTodo($event)
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                ],
+                staticClass: "form-control",
+                attrs: { placeholder: "What do you want done?", rows: "3" },
+                domProps: { value: _vm.newTodo.action },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.newTodo, "action", $event.target.value)
                   }
-                  _vm.action = $event.target.value
                 }
-              }
-            })
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.editing,
+                    expression: "!editing"
+                  }
+                ],
+                staticClass: "btn btn-success",
+                attrs: { disabled: !_vm.validTodo, type: "button" },
+                on: { click: _vm.addTodo }
+              },
+              [_vm._v("Add")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.editing,
+                    expression: "editing"
+                  }
+                ],
+                staticClass: "btn btn-success",
+                attrs: { disabled: !_vm.validTodo, type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.updateTodo(_vm.todos[_vm.editingIndex])
+                  }
+                }
+              },
+              [_vm._v("Update")]
+            )
           ]),
           _vm._v(" "),
-          _c(
-            "button",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.editing,
-                  expression: "!editing"
+          _c("div", { staticClass: "col-6" }, [
+            _c("label", { attrs: { for: "" } }, [_vm._v("Who will do it?")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.newTodo.person,
+                    expression: "newTodo.person"
+                  }
+                ],
+                staticClass: "custom-select",
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.newTodo,
+                        "person",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    },
+                    function($event) {
+                      _vm.newTodo.person = $event.target.value
+                    }
+                  ]
                 }
+              },
+              [
+                _c(
+                  "option",
+                  { attrs: { selected: "", disabled: "", value: "" } },
+                  [_vm._v("-Select-")]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.persons, function(person, index) {
+                  return _c("option", { domProps: { value: person.name } }, [
+                    _vm._v(_vm._s(person.name))
+                  ])
+                })
               ],
-              staticClass: "btn btn-success",
-              attrs: { disabled: !_vm.validTodo, type: "button" },
-              on: { click: _vm.addTodo }
-            },
-            [_vm._v("Add")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.editing,
-                  expression: "editing"
-                }
-              ],
-              staticClass: "btn btn-success",
-              attrs: { disabled: !_vm.validTodo, type: "button" },
-              on: {
-                click: function($event) {
-                  _vm.updateTodo(_vm.todos[_vm.editingIndex])
-                }
-              }
-            },
-            [_vm._v("Update")]
-          )
+              2
+            )
+          ])
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "col-6" }, [
+      _c("div", { staticClass: "col-4 person-adder" }, [
         _c("div", { staticClass: "form-group" }, [
           _c("textarea", {
             directives: [
@@ -48746,7 +48804,30 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "thead-dark" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Todo")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Doer")]),
+        _vm._v(" "),
+        _c("th", [_vm._v(" ")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { attrs: { colspan: "3" } }, [
+      _c("em", { staticClass: "text-center" }, [_vm._v("No assigned duties")])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -49146,7 +49227,7 @@ exports = module.exports = __webpack_require__(47)(false);
 
 
 // module
-exports.push([module.i, "\n.m-t-30{\n    margin-top:30px\n}\nbutton.mark-done{\n    margin-right: 20px\n}\nspan.done-indicator{\n    margin-left: 30px\n}\n", ""]);
+exports.push([module.i, "\n.m-t-30{\n    margin-top:30px\n}\nbutton.mark-done{\n    margin-right: 20px\n}\nspan.done-indicator{\n    margin-left: 10px\n}\n", ""]);
 
 // exports
 
@@ -49198,8 +49279,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         initialise: function initialise(state, data) {
             state.commit('initialise', data);
         },
-        addTodo: function addTodo(state, action) {
-            state.commit('addTodo', action);
+        addTodo: function addTodo(state, todo) {
+            state.commit('addTodo', todo);
         },
         deleteTodo: function deleteTodo(state, todo) {
             state.commit('deleteTodo', todo);
@@ -49218,13 +49299,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         initialise: function initialise(state, data) {
             state.todos = data;
         },
-        addTodo: function addTodo(_ref2, action) {
+        addTodo: function addTodo(_ref2, todo) {
             var todos = _ref2.todos;
 
-            todos.push({
-                action: action,
-                done: false
-            });
+            todos.push(todo);
         },
         deleteTodo: function deleteTodo(_ref3, todo) {
             var todos = _ref3.todos;
@@ -49251,7 +49329,13 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
     state: {
-        persons: []
+        persons: [{
+            name: 'Mike',
+            id: 'IAD8A0'
+        }, {
+            name: 'Mary',
+            id: 'ODF09'
+        }]
     },
 
     methods: {
@@ -49291,6 +49375,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
             var commit = _ref4.commit;
 
             commit('removePerson', person);
+        },
+        personById: function personById(id) {
+            return id;
         }
     },
 
