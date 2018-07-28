@@ -25790,7 +25790,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store___ = __webpack_require__(59);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Todos__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Todos___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_Todos__);
 
@@ -25819,7 +25819,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 
 var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
   el: '#app',
-  store: __WEBPACK_IMPORTED_MODULE_2__store__["a" /* default */],
+  store: __WEBPACK_IMPORTED_MODULE_2__store___["a" /* default */],
   components: {
     Todos: __WEBPACK_IMPORTED_MODULE_3__components_Todos___default.a
   }
@@ -48129,80 +48129,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
 
 /***/ }),
-/* 40 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(12);
-
-
-
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
-
-/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
-    state: {
-        todos: []
-    },
-
-    getters: {
-        todos: function todos(state) {
-            return state.todos;
-        }
-    },
-
-    actions: {
-        initialise: function initialise(state, data) {
-            state.commit('initialise', data);
-        },
-        addTodo: function addTodo(state, action) {
-            state.commit('addTodo', action);
-        },
-        deleteTodo: function deleteTodo(state, todo) {
-            state.commit('deleteTodo', todo);
-        },
-        markDone: function markDone(state, todo) {
-            state.commit('markDone', todo);
-        },
-        updateTodo: function updateTodo(_ref, params) {
-            var commit = _ref.commit;
-
-            commit('updateTodo', params);
-        }
-    },
-
-    mutations: {
-        initialise: function initialise(state, data) {
-            state.todos = data;
-        },
-        addTodo: function addTodo(_ref2, action) {
-            var todos = _ref2.todos;
-
-            todos.push({
-                action: action,
-                done: false
-            });
-        },
-        deleteTodo: function deleteTodo(_ref3, todo) {
-            var todos = _ref3.todos;
-
-            todos.splice(todos.indexOf(todo), 1);
-        },
-        markDone: function markDone(_ref4, todo) {
-            var todos = _ref4.todos;
-
-            todos[todos.indexOf(todo)].done = true;
-        },
-        updateTodo: function updateTodo(_ref5, params) {
-            var todos = _ref5.todos;
-
-            todos[todos.indexOf(params.todo)].action = params.action;
-        }
-    }
-}));
-
-/***/ }),
+/* 40 */,
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -48413,6 +48340,15 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -48424,11 +48360,21 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         return {
             action: '',
             editing: false,
-            editingIndex: ''
+            editingIndex: '',
+
+            name: '',
+            editingPerson: '',
+            editingPersonsId: ''
         };
     },
     created: function created() {
-        //do some axios call 
+        var persons = [{
+            name: 'John',
+            id: this.randomId()
+        }, {
+            name: 'Mike',
+            id: this.randomId()
+        }];
         var todos = [{
             action: 'Watch a movie',
             done: false
@@ -48439,8 +48385,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             action: 'Read a novel',
             done: false
         }];
-        //initialise todos
-        this.$store.dispatch('initialise', todos);
+        this.$store.dispatch('addPerson', 'James');
+        // this.$store.dispatch('initialise', todos)
         //console.log(todos)
     },
 
@@ -48448,8 +48394,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     computed: _extends({
         validTodo: function validTodo() {
             return this.action.length > 5;
+        },
+        validName: function validName() {
+            return this.name.length > 2;
         }
-    }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['todos'])),
+    }, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapGetters */])(['todos', 'persons'])),
 
     methods: {
         addTodo: function addTodo(action) {
@@ -48478,6 +48427,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             this.action = '';
             this.editing = false;
             $.growl.notice({ message: "Updated" });
+        },
+        randomId: function randomId() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 5; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }return text;
+        },
+
+
+        //person state methods
+        addPerson: function addPerson() {
+
+            this.$store.dispatch('addPerson', this.name);
+            this.name = '';
+            $.growl.notice({ message: "Added" });
         }
     }
 });
@@ -48611,80 +48577,172 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "col-md-8 col-md-offset-2 m-t-30" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model:value",
-              value: _vm.action,
-              expression: "action",
-              arg: "value"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: { placeholder: "What do you wanna do?", rows: "3" },
-          domProps: { value: _vm.action },
-          on: {
-            keyup: function($event) {
-              if (
-                !("button" in $event) &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.addTodo($event)
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.action = $event.target.value
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
+    _c("div", { staticClass: "row m-t-30" }, [
       _c(
-        "button",
+        "div",
         {
           directives: [
             {
               name: "show",
               rawName: "v-show",
-              value: !_vm.editing,
-              expression: "!editing"
+              value: _vm.persons.length > 0,
+              expression: "persons.length>0"
             }
           ],
-          staticClass: "btn btn-success",
-          attrs: { disabled: !_vm.validTodo, type: "button" },
-          on: { click: _vm.addTodo }
+          staticClass: "col-6"
         },
-        [_vm._v("Add")]
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model:value",
+                  value: _vm.action,
+                  expression: "action",
+                  arg: "value"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { placeholder: "What do you wanna do?", rows: "3" },
+              domProps: { value: _vm.action },
+              on: {
+                keyup: function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.addTodo($event)
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.action = $event.target.value
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.editing,
+                  expression: "!editing"
+                }
+              ],
+              staticClass: "btn btn-success",
+              attrs: { disabled: !_vm.validTodo, type: "button" },
+              on: { click: _vm.addTodo }
+            },
+            [_vm._v("Add")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.editing,
+                  expression: "editing"
+                }
+              ],
+              staticClass: "btn btn-success",
+              attrs: { disabled: !_vm.validTodo, type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.updateTodo(_vm.todos[_vm.editingIndex])
+                }
+              }
+            },
+            [_vm._v("Update")]
+          )
+        ]
       ),
       _vm._v(" "),
-      _c(
-        "button",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.editing,
-              expression: "editing"
+      _c("div", { staticClass: "col-6" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model:value",
+                value: _vm.name,
+                expression: "name",
+                arg: "value"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { placeholder: "New person name", rows: "3" },
+            domProps: { value: _vm.name },
+            on: {
+              keyup: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.addPersons($event)
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name = $event.target.value
+              }
             }
-          ],
-          staticClass: "btn btn-success",
-          attrs: { disabled: !_vm.validTodo, type: "button" },
-          on: {
-            click: function($event) {
-              _vm.updateTodo(_vm.todos[_vm.editingIndex])
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.editingPerson,
+                expression: "!editingPerson"
+              }
+            ],
+            staticClass: "btn btn-success",
+            attrs: { disabled: !_vm.validName, type: "button" },
+            on: { click: _vm.addPerson }
+          },
+          [_vm._v("Add")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.editingPerson,
+                expression: "editingPerson"
+              }
+            ],
+            staticClass: "btn btn-success",
+            attrs: { disabled: !_vm.validName, type: "button" },
+            on: {
+              click: function($event) {
+                _vm.updatePerson()
+              }
             }
-          }
-        },
-        [_vm._v("Update")]
-      )
+          },
+          [_vm._v("Update")]
+        )
+      ])
     ])
   ])
 }
@@ -49092,6 +49150,176 @@ exports.push([module.i, "\n.m-t-30{\n    margin-top:30px\n}\nbutton.mark-done{\n
 
 // exports
 
+
+/***/ }),
+/* 57 */,
+/* 58 */,
+/* 59 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_todos__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_persons__ = __webpack_require__(61);
+
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */]);
+
+/* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_1_vuex__["a" /* default */].Store({
+    modules: {
+        persons: __WEBPACK_IMPORTED_MODULE_3__modules_persons__["a" /* default */],
+        todos: __WEBPACK_IMPORTED_MODULE_2__modules_todos__["a" /* default */]
+    }
+}));
+
+/***/ }),
+/* 60 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    state: {
+        todos: []
+    },
+
+    getters: {
+        todos: function todos(state) {
+            return state.todos;
+        }
+    },
+
+    actions: {
+        initialise: function initialise(state, data) {
+            state.commit('initialise', data);
+        },
+        addTodo: function addTodo(state, action) {
+            state.commit('addTodo', action);
+        },
+        deleteTodo: function deleteTodo(state, todo) {
+            state.commit('deleteTodo', todo);
+        },
+        markDone: function markDone(state, todo) {
+            state.commit('markDone', todo);
+        },
+        updateTodo: function updateTodo(_ref, params) {
+            var commit = _ref.commit;
+
+            commit('updateTodo', params);
+        }
+    },
+
+    mutations: {
+        initialise: function initialise(state, data) {
+            state.todos = data;
+        },
+        addTodo: function addTodo(_ref2, action) {
+            var todos = _ref2.todos;
+
+            todos.push({
+                action: action,
+                done: false
+            });
+        },
+        deleteTodo: function deleteTodo(_ref3, todo) {
+            var todos = _ref3.todos;
+
+            todos.splice(todos.indexOf(todo), 1);
+        },
+        markDone: function markDone(_ref4, todo) {
+            var todos = _ref4.todos;
+
+            todos[todos.indexOf(todo)].done = true;
+        },
+        updateTodo: function updateTodo(_ref5, params) {
+            var todos = _ref5.todos;
+
+            todos[todos.indexOf(params.todo)].action = params.action;
+        }
+    }
+});
+
+/***/ }),
+/* 61 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    state: {
+        persons: []
+    },
+
+    methods: {
+        randomId: function randomId() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 5; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }return text;
+        }
+    },
+
+    getters: {
+        persons: function persons(state) {
+            return state.persons;
+        }
+    },
+
+    actions: {
+        initPersons: function initPersons(_ref, data) {
+            var commit = _ref.commit;
+
+            commit('initPersons', data);
+        },
+        addPerson: function addPerson(_ref2, name) {
+            var commit = _ref2.commit;
+
+            commit('addPerson', name);
+        },
+        updatePerson: function updatePerson(_ref3, params) {
+            var commit = _ref3.commit;
+
+            commit('updatePerson', params);
+        },
+        removePerson: function removePerson(_ref4, person) {
+            var commit = _ref4.commit;
+
+            commit('removePerson', person);
+        }
+    },
+
+    mutations: {
+        initPersons: function initPersons(_ref5, data) {
+            var persons = _ref5.persons;
+
+            persons = data;
+        },
+        addPersons: function addPersons(_ref6, pname) {
+            var persons = _ref6.persons;
+
+            persons.push({
+                name: name,
+                id: methods.randomId()
+            });
+        },
+        updatePerson: function updatePerson(_ref7, params) {
+            var persons = _ref7.persons;
+
+            persons[persons.indexOf(params.person)].name = params.name;
+        },
+        deletePerson: function deletePerson(_ref8, person) {
+            var persons = _ref8.persons;
+
+            persons.splice(persons.indexOf(person), 1);
+        }
+    }
+});
 
 /***/ })
 /******/ ]);

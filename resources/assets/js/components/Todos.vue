@@ -28,12 +28,21 @@
         </ul>
 
         
-        <div class="col-md-8 col-md-offset-2 m-t-30">
-            <div class="form-group">
+        <div class="row m-t-30">
+            <div class="col-6" v-show="persons.length>0">
+                <div class="form-group">
                 <textarea @keyup.enter="addTodo" v-model:value="action" class="form-control" placeholder="What do you wanna do?" rows="3"></textarea>
+                </div>
+                <button :disabled="!validTodo" @click="addTodo" type="button" v-show="!editing" class="btn btn-success">Add</button>
+                <button :disabled="!validTodo" @click="updateTodo(todos[editingIndex])" v-show="editing" type="button" class="btn btn-success">Update</button>
             </div>
-            <button :disabled="!validTodo" @click="addTodo" type="button" v-show="!editing" class="btn btn-success">Add</button>
-            <button :disabled="!validTodo" @click="updateTodo(todos[editingIndex])" v-show="editing" type="button" class="btn btn-success">Update</button>
+            <div class="col-6">
+                <div class="form-group">
+                <textarea @keyup.enter="addPersons" v-model:value="name" class="form-control" placeholder="New person name" rows="3"></textarea>
+                </div>
+                <button :disabled="!validName" @click="addPerson" type="button" v-show="!editingPerson" class="btn btn-success">Add</button>
+                <button :disabled="!validName" @click="updatePerson()" v-show="editingPerson" type="button" class="btn btn-success">Update</button>
+            </div>
         </div>
 
     </div>
@@ -51,12 +60,25 @@ export default {
         return{
             action:'',
             editing:false,
-            editingIndex:''
+            editingIndex:'',
+
+            name:'',
+            editingPerson:'',
+            editingPersonsId:''
         }
     },
 
     created(){
-        //do some axios call 
+        let persons = [
+            {
+                name:'John',
+                id:this.randomId()
+            },
+            {
+                name:'Mike',
+                id:this.randomId()
+            }
+        ]
         let todos = [
             {
                 action: 'Watch a movie',
@@ -71,8 +93,8 @@ export default {
                 done: false
             },
         ]
-        //initialise todos
-        this.$store.dispatch('initialise', todos)
+        this.$store.dispatch('addPerson', 'James')
+        // this.$store.dispatch('initialise', todos)
         //console.log(todos)
     },
     
@@ -80,7 +102,10 @@ export default {
         validTodo(){
             return this.action.length > 5;
         },
-        ...mapGetters(['todos'])
+        validName(){
+            return this.name.length > 2
+        },
+        ...mapGetters(['todos', 'persons'])
     },
 
     methods:{
@@ -110,7 +135,24 @@ export default {
             this.action = ''
             this.editing = false
             $.growl.notice({ message: "Updated" })
-        }
+        },
+        randomId() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          
+            for (var i = 0; i < 5; i++)
+              text += possible.charAt(Math.floor(Math.random() * possible.length));
+          
+            return text;
+        },
+
+        //person state methods
+        addPerson(){
+
+            this.$store.dispatch('addPerson', this.name)
+            this.name = ''
+            $.growl.notice({ message: "Added" });
+        },
     }
 }
 </script>

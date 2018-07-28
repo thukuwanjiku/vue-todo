@@ -12,7 +12,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-import store from './store'
+import store from './store/'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -1,9 +1,4 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export default{
     state:{
         todos:[]
     },
@@ -38,7 +33,7 @@ export default new Vuex.Store({
         },
         addTodo({todos}, action){
             todos.push({
-                action:action,
+                action,
                 done:false
             })
         },
@@ -52,4 +47,4 @@ export default new Vuex.Store({
             todos[todos.indexOf(params.todo)].action = params.action
         }
     }
-})
+}
