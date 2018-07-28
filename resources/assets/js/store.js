@@ -20,6 +20,12 @@ export default new Vuex.Store({
         },
         deleteTodo(context, todo){
             context.commit('deleteTodo', todo);
+        },
+        markDone(context, todo){
+            context.commit('markDone', todo)
+        },
+        initialise(context, data){
+            context.commit('initialise', data)
         }
     },
 
@@ -33,6 +39,13 @@ export default new Vuex.Store({
         deleteTodo(state, todo){
             let pos = state.todos.map(function(item) { return item.action; }).indexOf(todo.action)
             state.todos.splice(pos, 1);
+        },
+        markDone(state, todo){
+            let pos = state.todos.map(function(item) { return item.action; }).indexOf(todo.action)
+            state.todos[pos].done = true;
+        },
+        initialise(state, data){
+            state.todos = data;
         }
     }
 })

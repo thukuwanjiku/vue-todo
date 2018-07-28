@@ -9,13 +9,17 @@
             </li>
             <li v-for="(todo, index) in todos" class="list-group-item">
                 {{ todo.action }}
+
+                <span v-show="todo.done" class="badge badge-success done-indicator">Done</span>
                 
 
                 <button @click="deleteTodo(todo)" type="button" class="close">
                     <span aria-hidden="true">&times;</span>
                 </button>
 
-                <button @click="markDone(todo)" type="button" class="close mark-done">
+                <button @click="markDone(todo)" v-show="!todo.done" type="button" 
+                class="close mark-done"
+                data-toggle="tooltip" data-placement="top" title="Click to mark as done">
                     <span aria-hidden="true">&#10004;</span>
                 </button>
             </li>
@@ -45,6 +49,26 @@ export default {
             newTodo:''
         }
     },
+
+    created(){
+        //do some axios call 
+        let todos = [
+            {
+                action: 'Watch a movie',
+                done: false
+            },
+            {
+                action: 'Learn some vuejs',
+                done: true
+            },
+            {
+                action: 'Read a novel',
+                done: false
+            },
+        ]
+        //initialise todos
+        this.$store.dispatch('initialise', todos)
+    },
     
     computed:{
         validTodo(){
@@ -63,6 +87,10 @@ export default {
         deleteTodo(todo){
             this.$store.dispatch('deleteTodo', todo);
             $.growl.notice({ message: "Removed" });
+        },
+        markDone(todo){
+            this.$store.dispatch('markDone', todo)
+            // $.growl.notice({ message: "" });
         }
     }
 }
@@ -75,5 +103,8 @@ export default {
     }
     button.mark-done{
         margin-right: 20px
+    }
+    span.done-indicator{
+        margin-left: 30px
     }
 </style>

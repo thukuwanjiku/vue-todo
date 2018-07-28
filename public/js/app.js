@@ -48158,6 +48158,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         },
         deleteTodo: function deleteTodo(context, todo) {
             context.commit('deleteTodo', todo);
+        },
+        markDone: function markDone(context, todo) {
+            context.commit('markDone', todo);
+        },
+        initialise: function initialise(context, data) {
+            context.commit('initialise', data);
         }
     },
 
@@ -48173,6 +48179,15 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
                 return item.action;
             }).indexOf(todo.action);
             state.todos.splice(pos, 1);
+        },
+        markDone: function markDone(state, todo) {
+            var pos = state.todos.map(function (item) {
+                return item.action;
+            }).indexOf(todo.action);
+            state.todos[pos].done = true;
+        },
+        initialise: function initialise(state, data) {
+            state.todos = data;
         }
     }
 }));
@@ -48381,6 +48396,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -48392,6 +48411,21 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         return {
             newTodo: ''
         };
+    },
+    created: function created() {
+        //do some axios call 
+        var todos = [{
+            action: 'Watch a movie',
+            done: false
+        }, {
+            action: 'Learn some vuejs',
+            done: true
+        }, {
+            action: 'Read a novel',
+            done: false
+        }];
+        //initialise todos
+        this.$store.dispatch('initialise', todos);
     },
 
 
@@ -48411,6 +48445,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         deleteTodo: function deleteTodo(todo) {
             this.$store.dispatch('deleteTodo', todo);
             $.growl.notice({ message: "Removed" });
+        },
+        markDone: function markDone(todo) {
+            this.$store.dispatch('markDone', todo);
+            // $.growl.notice({ message: "" });
         }
     }
 });
@@ -48450,11 +48488,23 @@ var render = function() {
         _vm._v(" "),
         _vm._l(_vm.todos, function(todo, index) {
           return _c("li", { staticClass: "list-group-item" }, [
-            _vm._v(
-              "\n            " +
-                _vm._s(todo.action) +
-                "\n            \n\n            "
+            _vm._v("\n            " + _vm._s(todo.action) + "\n\n            "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: todo.done,
+                    expression: "todo.done"
+                  }
+                ],
+                staticClass: "badge badge-success done-indicator"
+              },
+              [_vm._v("Done")]
             ),
+            _vm._v(" "),
             _c(
               "button",
               {
@@ -48472,8 +48522,21 @@ var render = function() {
             _c(
               "button",
               {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !todo.done,
+                    expression: "!todo.done"
+                  }
+                ],
                 staticClass: "close mark-done",
-                attrs: { type: "button" },
+                attrs: {
+                  type: "button",
+                  "data-toggle": "tooltip",
+                  "data-placement": "top",
+                  title: "Click to mark as done"
+                },
                 on: {
                   click: function($event) {
                     _vm.markDone(todo)
@@ -48926,7 +48989,7 @@ exports = module.exports = __webpack_require__(47)(false);
 
 
 // module
-exports.push([module.i, "\n.m-t-30{\n    margin-top:30px\n}\nbutton.mark-done{\n    margin-right: 20px\n}\n", ""]);
+exports.push([module.i, "\n.m-t-30{\n    margin-top:30px\n}\nbutton.mark-done{\n    margin-right: 20px\n}\nspan.done-indicator{\n    margin-left: 30px\n}\n", ""]);
 
 // exports
 

@@ -21,6 +21,11 @@
 
         <script src="js/app.js"></script>
         <script src="js/jquery.growl.js" type="text/javascript"></script>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
             
     </body>
 </html>
