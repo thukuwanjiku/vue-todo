@@ -15,37 +15,35 @@ export default new Vuex.Store({
     },
 
     actions:{
-        addTodo(context, action){
-            context.commit('addTodo', action)
+        initialise(state, data){
+            state.commit('initialise', data)
         },
-        deleteTodo(context, todo){
-            context.commit('deleteTodo', todo);
+        addTodo(state, action){
+            state.commit('addTodo', action)
         },
-        markDone(context, todo){
-            context.commit('markDone', todo)
+        deleteTodo(state, todo){
+            state.commit('deleteTodo', todo);
         },
-        initialise(context, data){
-            context.commit('initialise', data)
+        markDone(state, todo){
+            state.commit('markDone', todo)
         }
     },
 
     mutations:{
-        addTodo(state, action){
-            state.todos.push({
+        initialise(state, data){
+            state.todos = data
+        },
+        addTodo({todos}, action){
+            todos.push({
                 action:action,
                 done:false
             })
         },
-        deleteTodo(state, todo){
-            let pos = state.todos.map(function(item) { return item.action; }).indexOf(todo.action)
-            state.todos.splice(pos, 1);
+        deleteTodo({todos}, todo){
+            todos.splice(todos.indexOf(todo), 1);
         },
-        markDone(state, todo){
-            let pos = state.todos.map(function(item) { return item.action; }).indexOf(todo.action)
-            state.todos[pos].done = true;
-        },
-        initialise(state, data){
-            state.todos = data;
+        markDone({todos}, todo){
+            todos[todos.indexOf(todo)].done = true;
         }
     }
 })

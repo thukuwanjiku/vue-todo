@@ -13,13 +13,14 @@
                 <span v-show="todo.done" class="badge badge-success done-indicator">Done</span>
                 
 
-                <button @click="deleteTodo(todo)" type="button" class="close">
+                <button @click="deleteTodo(todo)" type="button" class="close"
+                data-toggle="tooltip" data-placement="top" title="Delete todo">
                     <span aria-hidden="true">&times;</span>
                 </button>
 
                 <button @click="markDone(todo)" v-show="!todo.done" type="button" 
                 class="close mark-done"
-                data-toggle="tooltip" data-placement="top" title="Click to mark as done">
+                data-toggle="tooltip" data-placement="top" title="Mark as done">
                     <span aria-hidden="true">&#10004;</span>
                 </button>
             </li>
@@ -68,6 +69,7 @@ export default {
         ]
         //initialise todos
         this.$store.dispatch('initialise', todos)
+        //console.log(todos)
     },
     
     computed:{

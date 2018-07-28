@@ -48153,41 +48153,41 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
     },
 
     actions: {
-        addTodo: function addTodo(context, action) {
-            context.commit('addTodo', action);
+        initialise: function initialise(state, data) {
+            state.commit('initialise', data);
         },
-        deleteTodo: function deleteTodo(context, todo) {
-            context.commit('deleteTodo', todo);
+        addTodo: function addTodo(state, action) {
+            state.commit('addTodo', action);
         },
-        markDone: function markDone(context, todo) {
-            context.commit('markDone', todo);
+        deleteTodo: function deleteTodo(state, todo) {
+            state.commit('deleteTodo', todo);
         },
-        initialise: function initialise(context, data) {
-            context.commit('initialise', data);
+        markDone: function markDone(state, todo) {
+            state.commit('markDone', todo);
         }
     },
 
     mutations: {
-        addTodo: function addTodo(state, action) {
-            state.todos.push({
+        initialise: function initialise(state, data) {
+            state.todos = data;
+        },
+        addTodo: function addTodo(_ref, action) {
+            var todos = _ref.todos;
+
+            todos.push({
                 action: action,
                 done: false
             });
         },
-        deleteTodo: function deleteTodo(state, todo) {
-            var pos = state.todos.map(function (item) {
-                return item.action;
-            }).indexOf(todo.action);
-            state.todos.splice(pos, 1);
+        deleteTodo: function deleteTodo(_ref2, todo) {
+            var todos = _ref2.todos;
+
+            todos.splice(todos.indexOf(todo), 1);
         },
-        markDone: function markDone(state, todo) {
-            var pos = state.todos.map(function (item) {
-                return item.action;
-            }).indexOf(todo.action);
-            state.todos[pos].done = true;
-        },
-        initialise: function initialise(state, data) {
-            state.todos = data;
+        markDone: function markDone(_ref3, todo) {
+            var todos = _ref3.todos;
+
+            todos[todos.indexOf(todo)].done = true;
         }
     }
 }));
@@ -48400,6 +48400,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
 
 
 
@@ -48426,6 +48427,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         }];
         //initialise todos
         this.$store.dispatch('initialise', todos);
+        //console.log(todos)
     },
 
 
@@ -48509,7 +48511,12 @@ var render = function() {
               "button",
               {
                 staticClass: "close",
-                attrs: { type: "button" },
+                attrs: {
+                  type: "button",
+                  "data-toggle": "tooltip",
+                  "data-placement": "top",
+                  title: "Delete todo"
+                },
                 on: {
                   click: function($event) {
                     _vm.deleteTodo(todo)
@@ -48535,7 +48542,7 @@ var render = function() {
                   type: "button",
                   "data-toggle": "tooltip",
                   "data-placement": "top",
-                  title: "Click to mark as done"
+                  title: "Mark as done"
                 },
                 on: {
                   click: function($event) {
