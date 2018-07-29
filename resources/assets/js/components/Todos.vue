@@ -20,7 +20,7 @@
 
                 <tr v-for="(todo, index) in todos" @dblclick="editTodo(todo, index)" data-toggle="tooltip" data-placement="top" title="Double click to edit">
                     <td>{{ todo.action }} <span v-show="todo.done" class="badge badge-success done-indicator">Done</span></td>
-                    <td>{{ todo.person }}</td>
+                    <td>{{ personName(todo.person) }}</td>
                     <td>
                         <button @click="deleteTodo(todo)" type="button" class="close"
                         data-toggle="tooltip" data-placement="top" title="Delete todo">
@@ -46,20 +46,20 @@
             <div class="row todo-adder" v-show="persons.length>0">
                 <div class="col-6">
                     <div class="form-group">
-                        <textarea v-model:value="newTodo.action" class="form-control" placeholder="What do you want done?" rows="3"></textarea>
+                        <textarea v-model:value="workingTodo.action" class="form-control" placeholder="What do you want done?" rows="3"></textarea>
                     </div>
                     <button :disabled="!validTodo" @click="addTodo" type="button" v-show="!editing" class="btn btn-success">Add</button>
                     <button :disabled="!validTodo" @click="updateTodo(todos[editingIndex])" v-show="editing" type="button" class="btn btn-success">Update</button>
                 </div>
                 <div class="col-6">
                     <label for="">Who will do it?</label>
-                    <select class="custom-select" v-model="newTodo.person" @change="newTodo.person = $event.target.value">
+                    <select class="custom-select" v-model="workingTodo.person" @change="workingTodo.person = $event.target.value">
                         <option selected disabled value="">-Select-</option>
-                        <option v-for="(person, index) in persons" :value="person.name">{{ person.name }}</option>
+                        <option v-for="(person, index) in persons" :value="person.id">{{ person.name }}</option>
                     </select>
                 </div>
             </div>
-            <div class="col-4 person-adder">
+            <div class="col-4 person-adder" v-show="false">
                 <div class="form-group">
                 <textarea @keyup.enter="addPersons" v-model:value="name" class="form-control" placeholder="New person name" rows="3"></textarea>
                 </div>
@@ -81,7 +81,7 @@ export default {
     
     data(){
         return{
-            newTodo:{
+            workingTodo:{
                 action:'',
                 done: false,
                 person:''
@@ -97,7 +97,7 @@ export default {
 
     computed:{
         validTodo(){
-            return this.newTodo.action.length > 5 && this.newTodo.person.length
+            return this.workingTodo.action.length > 5 && this.workingTodo.person.length
         },
         validName(){
             return this.name.length > 2
@@ -109,14 +109,14 @@ export default {
         addTodo(){
             
             this.$store.dispatch('addTodo', {
-                action:this.newTodo.action,
+                action:this.workingTodo.action,
                 done:false,
-                person:this.newTodo.person
+                person:this.workingTodo.person
             })
             // this.newTodo.action = '',
             window.setTimeout(()=>{
-                this.newTodo.action = ''
-                this.newTodo.person = ''
+                this.workingTodo.action = ''
+                this.workingTodo.person = ''
                 $.growl.notice({ message: "Added" });
             }, 500)
             
@@ -130,15 +130,22 @@ export default {
             // $.growl.notice({ message: "" });
         },
         editTodo(todo, index){
-            //add todo body to textarea
-            this.action = todo.action
+            this.workingTodo = {
+                action: todo.action,
+                done: todo.done,
+                person: todo.person
+            }
             this.editing = true;
             this.editingIndex = index
         },
-        updateTodo(todo){
-            let action = this.action
-            this.$store.dispatch('updateTodo', {todo, action})
-            this.action = ''
+        updateTodo(){
+            this.$store.dispatch('updateTodo', [{
+                action:this.workingTodo.action,
+                person: this.workingTodo.person
+            }, this.editingIndex])
+
+            this.workingTodo.action = ''
+            this.workingTodo.person = ''
             this.editing = false
             $.growl.notice({ message: "Updated" })
         },
@@ -158,6 +165,9 @@ export default {
             this.$store.commit('addPerson', this.name)
             this.name = ''
             $.growl.notice({ message: "Added" });
+        },
+        personName(id){
+            return this.persons[this.persons.findIndex(persons =>  persons.id == id)].name
         }
     }
 }

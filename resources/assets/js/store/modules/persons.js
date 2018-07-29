@@ -1,14 +1,14 @@
 export default{
     state:{
         persons:[
-            // {
-            //     name:'Mike',
-            //     id: 'IAD8A0'
-            // },
-            // {
-            //     name:'Mary',
-            //     id:'ODF09'
-            // }
+            {
+                name:'Mike',
+                id: 'IAD8A0'
+            },
+            {
+                name:'Mary',
+                id:'ODF09'
+            }
         ]
     },
 

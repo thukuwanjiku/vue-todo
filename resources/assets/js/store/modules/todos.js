@@ -41,7 +41,8 @@ export default{
             todos[todos.indexOf(todo)].done = true;
         },
         updateTodo({todos}, params){
-            todos[todos.indexOf(params.todo)].action = params.action
+            todos[params[1]].action = params[0].action
+            todos[params[1]].person = params[0].person
         },
     }
 }

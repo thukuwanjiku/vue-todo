@@ -48211,7 +48211,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
         updateTodo: function updateTodo(_ref5, params) {
             var todos = _ref5.todos;
 
-            todos[todos.indexOf(params.todo)].action = params.action;
+            todos[params[1]].action = params[0].action;
+            todos[params[1]].person = params[0].person;
         }
     }
 });
@@ -48223,16 +48224,13 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
     state: {
-        persons: [
-            // {
-            //     name:'Mike',
-            //     id: 'IAD8A0'
-            // },
-            // {
-            //     name:'Mary',
-            //     id:'ODF09'
-            // }
-        ]
+        persons: [{
+            name: 'Mike',
+            id: 'IAD8A0'
+        }, {
+            name: 'Mary',
+            id: 'ODF09'
+        }]
     },
 
     methods: {
@@ -48940,7 +48938,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
     data: function data() {
         return {
-            newTodo: {
+            workingTodo: {
                 action: '',
                 done: false,
                 person: ''
@@ -48957,7 +48955,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
     computed: _extends({
         validTodo: function validTodo() {
-            return this.newTodo.action.length > 5 && this.newTodo.person.length;
+            return this.workingTodo.action.length > 5 && this.workingTodo.person.length;
         },
         validName: function validName() {
             return this.name.length > 2;
@@ -48969,14 +48967,14 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             var _this = this;
 
             this.$store.dispatch('addTodo', {
-                action: this.newTodo.action,
+                action: this.workingTodo.action,
                 done: false,
-                person: this.newTodo.person
+                person: this.workingTodo.person
             });
             // this.newTodo.action = '',
             window.setTimeout(function () {
-                _this.newTodo.action = '';
-                _this.newTodo.person = '';
+                _this.workingTodo.action = '';
+                _this.workingTodo.person = '';
                 $.growl.notice({ message: "Added" });
             }, 500);
         },
@@ -48989,15 +48987,22 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             // $.growl.notice({ message: "" });
         },
         editTodo: function editTodo(todo, index) {
-            //add todo body to textarea
-            this.action = todo.action;
+            this.workingTodo = {
+                action: todo.action,
+                done: todo.done,
+                person: todo.person
+            };
             this.editing = true;
             this.editingIndex = index;
         },
-        updateTodo: function updateTodo(todo) {
-            var action = this.action;
-            this.$store.dispatch('updateTodo', { todo: todo, action: action });
-            this.action = '';
+        updateTodo: function updateTodo() {
+            this.$store.dispatch('updateTodo', [{
+                action: this.workingTodo.action,
+                person: this.workingTodo.person
+            }, this.editingIndex]);
+
+            this.workingTodo.action = '';
+            this.workingTodo.person = '';
             this.editing = false;
             $.growl.notice({ message: "Updated" });
         },
@@ -49017,6 +49022,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
             this.$store.commit('addPerson', this.name);
             this.name = '';
             $.growl.notice({ message: "Added" });
+        },
+        personName: function personName(id) {
+            return this.persons[this.persons.findIndex(function (persons) {
+                return persons.id == id;
+            })].name;
         }
     }
 });
@@ -49086,7 +49096,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(todo.person))]),
+                _c("td", [_vm._v(_vm._s(_vm.personName(todo.person)))]),
                 _vm._v(" "),
                 _c("td", [
                   _c(
@@ -49194,20 +49204,20 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model:value",
-                    value: _vm.newTodo.action,
-                    expression: "newTodo.action",
+                    value: _vm.workingTodo.action,
+                    expression: "workingTodo.action",
                     arg: "value"
                   }
                 ],
                 staticClass: "form-control",
                 attrs: { placeholder: "What do you want done?", rows: "3" },
-                domProps: { value: _vm.newTodo.action },
+                domProps: { value: _vm.workingTodo.action },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.newTodo, "action", $event.target.value)
+                    _vm.$set(_vm.workingTodo, "action", $event.target.value)
                   }
                 }
               })
@@ -49264,8 +49274,8 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.newTodo.person,
-                    expression: "newTodo.person"
+                    value: _vm.workingTodo.person,
+                    expression: "workingTodo.person"
                   }
                 ],
                 staticClass: "custom-select",
@@ -49281,7 +49291,7 @@ var render = function() {
                           return val
                         })
                       _vm.$set(
-                        _vm.newTodo,
+                        _vm.workingTodo,
                         "person",
                         $event.target.multiple
                           ? $$selectedVal
@@ -49289,7 +49299,7 @@ var render = function() {
                       )
                     },
                     function($event) {
-                      _vm.newTodo.person = $event.target.value
+                      _vm.workingTodo.person = $event.target.value
                     }
                   ]
                 }
@@ -49302,7 +49312,7 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _vm._l(_vm.persons, function(person, index) {
-                  return _c("option", { domProps: { value: person.name } }, [
+                  return _c("option", { domProps: { value: person.id } }, [
                     _vm._v(_vm._s(person.name))
                   ])
                 })
@@ -49313,81 +49323,95 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "col-4 person-adder" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model:value",
-                value: _vm.name,
-                expression: "name",
-                arg: "value"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { placeholder: "New person name", rows: "3" },
-            domProps: { value: _vm.name },
-            on: {
-              keyup: function($event) {
-                if (
-                  !("button" in $event) &&
-                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                ) {
-                  return null
-                }
-                return _vm.addPersons($event)
-              },
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.name = $event.target.value
-              }
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: false,
+              expression: "false"
             }
-          })
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: !_vm.editingPerson,
-                expression: "!editingPerson"
+          ],
+          staticClass: "col-4 person-adder"
+        },
+        [
+          _c("div", { staticClass: "form-group" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model:value",
+                  value: _vm.name,
+                  expression: "name",
+                  arg: "value"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { placeholder: "New person name", rows: "3" },
+              domProps: { value: _vm.name },
+              on: {
+                keyup: function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                  ) {
+                    return null
+                  }
+                  return _vm.addPersons($event)
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
               }
-            ],
-            staticClass: "btn btn-success",
-            attrs: { disabled: !_vm.validName, type: "button" },
-            on: { click: _vm.addPerson }
-          },
-          [_vm._v("Add")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: _vm.editingPerson,
-                expression: "editingPerson"
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.editingPerson,
+                  expression: "!editingPerson"
+                }
+              ],
+              staticClass: "btn btn-success",
+              attrs: { disabled: !_vm.validName, type: "button" },
+              on: { click: _vm.addPerson }
+            },
+            [_vm._v("Add")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.editingPerson,
+                  expression: "editingPerson"
+                }
+              ],
+              staticClass: "btn btn-success",
+              attrs: { disabled: !_vm.validName, type: "button" },
+              on: {
+                click: function($event) {
+                  _vm.updatePerson()
+                }
               }
-            ],
-            staticClass: "btn btn-success",
-            attrs: { disabled: !_vm.validName, type: "button" },
-            on: {
-              click: function($event) {
-                _vm.updatePerson()
-              }
-            }
-          },
-          [_vm._v("Update")]
-        )
-      ])
+            },
+            [_vm._v("Update")]
+          )
+        ]
+      )
     ])
   ])
 }
