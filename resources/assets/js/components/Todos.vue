@@ -5,7 +5,7 @@
         <table class="table table-hover table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Todo</th>
+                    <th scope="col">Task</th>
                     <th scope="col">Doer</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -38,6 +38,9 @@
             </tbody>
         </table>
 
+        <div class="alert alert-info" role="alert" v-show="persons.length==0">
+            You must add at least one person to handle the tasks, before you can add the task
+        </div>
         
         <div class="row m-t-30">
             <div class="row todo-adder" v-show="persons.length>0">
@@ -104,8 +107,12 @@ export default {
 
     methods:{
         addTodo(){
-
-            this.$store.dispatch('addTodo', this.newTodo)
+            
+            this.$store.dispatch('addTodo', {
+                action:this.newTodo.action,
+                done:false,
+                person:this.newTodo.person
+            })
             // this.newTodo.action = '',
             window.setTimeout(()=>{
                 this.newTodo.action = ''
@@ -148,7 +155,7 @@ export default {
         //person state methods
         addPerson(){
 
-            this.$store.dispatch('addPerson', this.name)
+            this.$store.commit('addPerson', this.name)
             this.name = ''
             $.growl.notice({ message: "Added" });
         }

@@ -42,6 +42,6 @@ export default{
         },
         updateTodo({todos}, params){
             todos[todos.indexOf(params.todo)].action = params.action
-        }
+        },
     }
 }

@@ -1,14 +1,14 @@
 export default{
     state:{
         persons:[
-            {
-                name:'Mike',
-                id: 'IAD8A0'
-            },
-            {
-                name:'Mary',
-                id:'ODF09'
-            }
+            // {
+            //     name:'Mike',
+            //     id: 'IAD8A0'
+            // },
+            // {
+            //     name:'Mary',
+            //     id:'ODF09'
+            // }
         ]
     },
 
@@ -52,7 +52,7 @@ export default{
         initPersons({persons}, data){
             persons = data
         },
-        addPersons({persons}, pname){
+        addPersons({persons}, name){
             persons.push({
                 name,
                 id: methods.randomId()
