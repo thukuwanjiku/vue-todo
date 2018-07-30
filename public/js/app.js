@@ -25827,8 +25827,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
 /***/ }),
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 
 window._ = __webpack_require__(16);
 window.Popper = __webpack_require__(4).default;
@@ -25868,6 +25869,15 @@ if (token) {
 } else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+window.randomId = function () {
+  var text = "";
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 5; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }return text;
+};
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -48224,26 +48234,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
     state: {
-        persons: [{
-            name: 'Mike',
-            id: 'IAD8A0'
-        }, {
-            name: 'Mary',
-            id: 'ODF09'
-        }]
+        persons: [
+            // {
+            //     name:'Mike',
+            //     id: 'IAD8A0'
+            // },
+            // {
+            //     name:'Mary',
+            //     id:'ODF09'
+            // }
+        ]
     },
-
-    methods: {
-        randomId: function randomId() {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            for (var i = 0; i < 5; i++) {
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-            }return text;
-        }
-    },
-
     getters: {
         persons: function persons(state) {
             return state.persons;
@@ -48282,12 +48283,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 
             persons = data;
         },
-        addPersons: function addPersons(_ref6, name) {
+        addPerson: function addPerson(_ref6, name) {
             var persons = _ref6.persons;
 
             persons.push({
                 name: name,
-                id: methods.randomId()
+                id: window.randomId()
             });
         },
         updatePerson: function updatePerson(_ref7, params) {
@@ -49019,7 +49020,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
         //person state methods
         addPerson: function addPerson() {
 
-            this.$store.commit('addPerson', this.name);
+            this.$store.dispatch('addPerson', this.name);
             this.name = '';
             $.growl.notice({ message: "Added" });
         },
@@ -49323,95 +49324,81 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: false,
-              expression: "false"
+      _c("div", { staticClass: "col-4 person-adder" }, [
+        _c("div", { staticClass: "form-group" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model:value",
+                value: _vm.name,
+                expression: "name",
+                arg: "value"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { placeholder: "New person name", rows: "3" },
+            domProps: { value: _vm.name },
+            on: {
+              keyup: function($event) {
+                if (
+                  !("button" in $event) &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.addPersons($event)
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name = $event.target.value
+              }
             }
-          ],
-          staticClass: "col-4 person-adder"
-        },
-        [
-          _c("div", { staticClass: "form-group" }, [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model:value",
-                  value: _vm.name,
-                  expression: "name",
-                  arg: "value"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { placeholder: "New person name", rows: "3" },
-              domProps: { value: _vm.name },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  return _vm.addPersons($event)
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.name = $event.target.value
-                }
+          })
+        ]),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.editingPerson,
+                expression: "!editingPerson"
               }
-            })
-          ]),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.editingPerson,
-                  expression: "!editingPerson"
-                }
-              ],
-              staticClass: "btn btn-success",
-              attrs: { disabled: !_vm.validName, type: "button" },
-              on: { click: _vm.addPerson }
-            },
-            [_vm._v("Add")]
-          ),
-          _vm._v(" "),
-          _c(
-            "button",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.editingPerson,
-                  expression: "editingPerson"
-                }
-              ],
-              staticClass: "btn btn-success",
-              attrs: { disabled: !_vm.validName, type: "button" },
-              on: {
-                click: function($event) {
-                  _vm.updatePerson()
-                }
+            ],
+            staticClass: "btn btn-success",
+            attrs: { disabled: !_vm.validName, type: "button" },
+            on: { click: _vm.addPerson }
+          },
+          [_vm._v("Add")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.editingPerson,
+                expression: "editingPerson"
               }
-            },
-            [_vm._v("Update")]
-          )
-        ]
-      )
+            ],
+            staticClass: "btn btn-success",
+            attrs: { disabled: !_vm.validName, type: "button" },
+            on: {
+              click: function($event) {
+                _vm.updatePerson()
+              }
+            }
+          },
+          [_vm._v("Update")]
+        )
+      ])
     ])
   ])
 }

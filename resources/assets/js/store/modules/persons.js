@@ -1,29 +1,16 @@
 export default{
     state:{
         persons:[
-            {
-                name:'Mike',
-                id: 'IAD8A0'
-            },
-            {
-                name:'Mary',
-                id:'ODF09'
-            }
+            // {
+            //     name:'Mike',
+            //     id: 'IAD8A0'
+            // },
+            // {
+            //     name:'Mary',
+            //     id:'ODF09'
+            // }
         ]
     },
-
-    methods:{
-        randomId() {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-          
-            for (var i = 0; i < 5; i++)
-              text += possible.charAt(Math.floor(Math.random() * possible.length));
-          
-            return text;
-          }
-    },
-
     getters:{
         persons(state){
             return state.persons;
@@ -52,10 +39,10 @@ export default{
         initPersons({persons}, data){
             persons = data
         },
-        addPersons({persons}, name){
+        addPerson({persons}, name){
             persons.push({
                 name,
-                id: methods.randomId()
+                id:window.randomId()
             })
 
         },

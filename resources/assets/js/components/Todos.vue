@@ -59,7 +59,7 @@
                     </select>
                 </div>
             </div>
-            <div class="col-4 person-adder" v-show="false">
+            <div class="col-4 person-adder">
                 <div class="form-group">
                 <textarea @keyup.enter="addPersons" v-model:value="name" class="form-control" placeholder="New person name" rows="3"></textarea>
                 </div>
@@ -162,7 +162,7 @@ export default {
         //person state methods
         addPerson(){
 
-            this.$store.commit('addPerson', this.name)
+            this.$store.dispatch('addPerson', this.name)
             this.name = ''
             $.growl.notice({ message: "Added" });
         },
