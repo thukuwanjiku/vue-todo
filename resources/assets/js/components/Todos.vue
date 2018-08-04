@@ -20,7 +20,7 @@
 
                 <tr v-for="(todo, index) in todos" @dblclick="editTodo(todo, index)" data-toggle="tooltip" data-placement="top" title="Double click to edit">
                     <td>{{ todo.action }} <span v-show="todo.done" class="badge badge-success done-indicator">Done</span></td>
-                    <td>{{ personName(todo.person) }}</td>
+                    <td>{{ todo.person }}</td>
                     <td>
                         <button @click="deleteTodo(todo)" type="button" class="close"
                         data-toggle="tooltip" data-placement="top" title="Delete todo">
@@ -53,10 +53,12 @@
                 </div>
                 <div class="col-6">
                     <label for="">Who will do it?</label>
-                    <select class="custom-select" v-model="workingTodo.person" @change="workingTodo.person = $event.target.value">
+                    <!-- <select class="custom-select" v-model="workingTodo.person" @change="workingTodo.person = $event.target.value">
                         <option selected disabled value="">-Select-</option>
                         <option v-for="(person, index) in persons" :value="person.id">{{ person.name }}</option>
-                    </select>
+                    </select> -->
+                    <multiselect v-model="workingTodo.person" placeholder="Select one" label="name" track-by="id" :options="persons" :searchable="true" :allow-empty="false">
+                    </multiselect>
                 </div>
             </div>
             <div class="col-4 person-adder">
@@ -75,9 +77,14 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
+import Multiselect from 'vue-multiselect'
+
 
 export default {
     name: 'Todos',
+    components:{
+        Multiselect
+    },
     
     data(){
         return{
@@ -101,6 +108,9 @@ export default {
         },
         validName(){
             return this.name.length > 2
+        },
+        names(){
+            return this.persons.map((person) => { return person.name; });
         },
         ...mapGetters(['todos', 'persons'])
     },
@@ -172,6 +182,8 @@ export default {
     }
 }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
 
