@@ -20,7 +20,7 @@
 
                 <tr v-for="(todo, index) in todos" @dblclick="editTodo(todo, index)" data-toggle="tooltip" data-placement="top" title="Double click to edit">
                     <td>{{ todo.action }} <span v-show="todo.done" class="badge badge-success done-indicator">Done</span></td>
-                    <td>{{ todo.person }}</td>
+                    <td>{{ personName(todo.person) }}</td>
                     <td>
                         <button @click="deleteTodo(todo)" type="button" class="close"
                         data-toggle="tooltip" data-placement="top" title="Delete todo">
@@ -57,18 +57,29 @@
                         <option selected disabled value="">-Select-</option>
                         <option v-for="(person, index) in persons" :value="person.id">{{ person.name }}</option>
                     </select> -->
-                    <multiselect v-model="workingTodo.person" placeholder="Select one" label="name" track-by="id" :options="persons" :searchable="true" :allow-empty="false">
-                    </multiselect>
+                    
+                    <el-select v-model="workingTodo.person" placeholder="Select doer">
+                        <el-option
+                        v-for="person in persons"
+                        :key="person.id"
+                        :label="person.name"
+                        :value="person.id">
+                        </el-option>
+                    </el-select>
+                    
                 </div>
             </div>
             <div class="col-4 person-adder">
                 <div class="form-group">
-                <textarea @keyup.enter="addPersons" v-model:value="name" class="form-control" placeholder="New person name" rows="3"></textarea>
+                <input v-model:value="name" class="form-control" placeholder="New person name">
                 </div>
                 <button :disabled="!validName" @click="addPerson" type="button" v-show="!editingPerson" class="btn btn-success">Add</button>
                 <button :disabled="!validName" @click="updatePerson()" v-show="editingPerson" type="button" class="btn btn-success">Update</button>
             </div>
         </div>
+
+        <Spinner name="ball-scale-multiple" color="#094237"/>
+
 
     </div>
 
@@ -76,14 +87,18 @@
 
 <script>
 
+import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex'
-import Multiselect from 'vue-multiselect'
+import Parallax from "vue-parallaxy";
+
+import Spinner from 'vue-spinkit'
 
 
 export default {
     name: 'Todos',
-    components:{
-        Multiselect
+
+    components: {
+        Parallax, Spinner
     },
     
     data(){
