@@ -21,10 +21,13 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "bulma": "^0.7.1",
         "element-ui": "^2.4.5",
+        "vee-validate": "^2.1.0-beta.7",
         "vue-droppler": "^0.1.4",
         "vue-multiselect": "^2.1.0",
         "vue-parallaxy": "^1.1.1",
+        "vue-router": "^3.0.1",
         "vue-spinkit": "^1.4.1",
         "vuex": "^3.0.1",
         "vuex-persist": "^1.4.3"

@@ -78,8 +78,6 @@
             </div>
         </div>
 
-        <Spinner name="ball-scale-multiple" color="#094237"/>
-
 
     </div>
 

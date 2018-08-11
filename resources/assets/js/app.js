@@ -13,10 +13,13 @@ Vue.use(Vuex)
 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI)
+Vue.use(ElementUI);
+
+
 
 
 import store from './store/'
+import router from './routes'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -24,12 +27,11 @@ import store from './store/'
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import Todos from './components/Todos'
+import App from './components/App'
 
 const app = new Vue({
     el: '#app',
     store,
-    components:{
-        Todos
-    }
+    router,
+    render:h=>h(App)
 });
